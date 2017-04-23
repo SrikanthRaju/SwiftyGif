@@ -27,6 +27,7 @@ let _displayingKey = malloc(4)
 let _isPlayingKey = malloc(4)
 let _animationManagerKey = malloc(4)
 let _delegateKey = malloc(4)
+let _loopCompletionBlockKey = malloc(4)
 
 @objc public protocol SwiftyGifDelegate {
     @objc optional func gifDidStart()
@@ -281,6 +282,8 @@ public extension UIImageView {
                     }
                     self.delegate?.gifDidLoop?()
                 }
+                
+                loopCompletionBlock?(loopCount, displayOrderIndex)
             }
         }
     }
@@ -415,6 +418,15 @@ public extension UIImageView {
         }
         set {
             objc_setAssociatedObject(self, _cacheKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN);
+        }
+    }
+    
+    var loopCompletionBlock: ((Int, Int) -> Void)? {
+        get {
+            return (objc_getAssociatedObject(self, _loopCompletionBlockKey) as? ((_ loopCountRemaining: Int, _ currentFrameIndex: Int) -> Void))
+        }
+        set {
+            objc_setAssociatedObject(self, _loopCompletionBlockKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN);
         }
     }
 }
