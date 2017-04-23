@@ -147,7 +147,7 @@ public extension UIImage{
             return nil
         }
         let value = unsafeBitCast(pointer, to:AnyObject.self)
-        return value.floatValue
+        return value.floatValue + 0.04
     }
 
     /**
